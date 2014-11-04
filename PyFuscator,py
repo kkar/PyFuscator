@@ -1,0 +1,36 @@
+#!/usr/bin/python
+
+import random, sys
+
+def Obfuscate(body):
+	obfuscated = ""
+	for i in range(0, len(body)):
+		if obfuscated == "":
+			obfuscated += expr(ord(body[i]))
+		else:
+			obfuscated += "+" + expr(ord(body[i]))
+	return obfuscated
+
+def expr(char):
+	range = random.randrange(1,10001)
+	exp = random.randrange(0,3)
+
+	if exp == 0:
+		print "Converting char %s => %s" % (str(char), str((range+char)) + "-" + str(range))
+		return "chr(" + str((range+char)) + "-" + str(range) + ")"
+	elif exp == 1:
+		print "Converting char %s => %s" % (str(char), str((char-range)) + "+" + str(range))
+		return "chr(" + str((char-range)) + "+" + str(range) + ")"
+	elif exp == 2:
+		print "Converting char %s => %s" % (str(char), str((char*range)) + "/" + str(range))
+		return "chr(" + str((char*range)) + "/" + str(range) + ")"
+
+python_script = open(sys.argv[1], "r")
+obfuscated_result = open(sys.argv[2], "w")
+
+obfuscated_result.write("exec("+Obfuscate(python_script.read())+")")
+
+python_script.close()
+obfuscated_result.close()
+
+print "Done!"
